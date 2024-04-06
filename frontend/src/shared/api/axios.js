@@ -1,13 +1,8 @@
 import axios from 'axios'
 
-let hostUrl = window.location.origin
-const isProduction = process.env.NODE_ENV === 'production'
+let hostUrl = import.meta.env.VITE_SERVER_URL || window.location.origin
 
 console.log(import.meta.env.VITE_SERVER_URL)
-
-if (import.meta.env.VITE_SERVER_URL && !isProduction) {
-  hostUrl = import.meta.env.VITE_SERVER_URL
-}
 
 const authInterceptor = (config) => {
   config.headers = {
