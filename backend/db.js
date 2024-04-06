@@ -1,3 +1,11 @@
+import pg from 'pg';
+
+const { Pool } = pg;
+
+const pool = new Pool({
+  connectionString: process.env.POSTGRES_URL ,
+})
+
 const { Sequelize } = require("sequelize");
 
 module.exports = new Sequelize(
