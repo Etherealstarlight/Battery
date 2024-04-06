@@ -1,7 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 // const sequelize = require('./db')
-const models = require('./models/models')
+// const models = require('./models/models')
 const cors = require('cors')
 const router = require('./routes/index')
 const errorHandler = require('./middleware/ErrorHandlingMiddleware')
@@ -31,20 +31,20 @@ app.use(errorHandler)
 
 console.log('STARTED')
 
-setInterval(async () => {
-  const batteries = await models.Battery.findAll()
+// setInterval(async () => {
+//   const batteries = await models.Battery.findAll()
 
-  batteries.forEach(async (battery) => {
-    if (battery.percents > 1) {
-      await models.Battery.update(
-        { percents: Number(battery.percents) >= 11 ? Number(battery.percents) - 10 : 1 },
-        {
-          where: { id: battery.id },
-        }
-      )
-    }
-  })
-}, 100000)
+//   batteries.forEach(async (battery) => {
+//     if (battery.percents > 1) {
+//       await models.Battery.update(
+//         { percents: Number(battery.percents) >= 11 ? Number(battery.percents) - 10 : 1 },
+//         {
+//           where: { id: battery.id },
+//         }
+//       )
+//     }
+//   })
+// }, 100000)
 
 app.get('/', (request, response) => {
   response.status(200).json({ message: 'SUCCESS' })
