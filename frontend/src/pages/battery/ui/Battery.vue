@@ -39,7 +39,7 @@
   const router = useRouter()
 
   onMounted(() => {
-    batteryStore.getUserBattery(3)
+    batteryStore.getUserBattery(1)
   })
 
   const updateUserBattery = () => {

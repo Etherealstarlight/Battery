@@ -1,20 +1,7 @@
-import pg from 'pg';
+const { Sequelize } = require('sequelize')
 
-const { Pool } = pg;
-
-const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL ,
+module.exports = new Sequelize(process.env.DB_LINK, {
+  dialect: 'postgres',
+  protocol: 'postgres',
+  dialectOptions: {}, //removed ssl
 })
-
-const { Sequelize } = require("sequelize");
-
-module.exports = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    dialect: "postgres",
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-  }
-);
