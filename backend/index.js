@@ -1,6 +1,6 @@
 require('dotenv').config()
 const express = require('express')
-const sequelize = require('./db')
+// const sequelize = require('./db')
 const models = require('./models/models')
 const cors = require('cors')
 const router = require('./routes/index')
@@ -15,19 +15,19 @@ app.use('/api', router)
 
 app.use(errorHandler)
 
-const start = async () => {
-  try {
-    await sequelize.authenticate()
-    await sequelize.sync()
-    app.listen(PORT, () => {
-      console.log(`Server Connection Successful on ${PORT}`)
-    })
-  } catch (e) {
-    console.log(e)
-  }
-}
+// const start = async () => {
+//   try {
+//     await sequelize.authenticate()
+//     await sequelize.sync()
+//     app.listen(PORT, () => {
+//       console.log(`Server Connection Successful on ${PORT}`)
+//     })
+//   } catch (e) {
+//     console.log(e)
+//   }
+// }
 
-start()
+// start()
 
 console.log('STARTED')
 
