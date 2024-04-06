@@ -29,7 +29,7 @@ const start = async () => {
 
 start()
 
-console.log(router)
+console.log('STARTED')
 
 setInterval(async () => {
   const batteries = await models.Battery.findAll()
@@ -46,34 +46,6 @@ setInterval(async () => {
   })
 }, 100000)
 
-// const CONNECTION_STRING = "";
-
-// const DATABASENAME = "tactilebatteryappdb";
-// var database;
-
 app.get('/', (request, response) => {
   response.status(200).json({ message: 'SUCCESS' })
 })
-
-// app.post(
-//   "/api/tactilebatteryapp/AddBattery",
-//   multer().none(),
-//   (request, response) => {
-//     database
-//       .collection("tactilebatterycollection")
-//       .count({}, function (error, numOfDocs) {
-//         database.collection("tactilebatterycollection").insertOne({
-//           id: (numOfDocs + 1).toString(),
-//           percents: request.body.percents,
-//         });
-//         response.json("Added Successfully");
-//       });
-//   }
-// );
-
-// app.delete("/api/tactilebatteryapp/DeleteBattery", (request, response) => {
-//   database.collection("tactilebatterycollection").deleteOne({
-//     id: request.body.id,
-//   });
-//   response.json("Delete Successfully");
-// });
