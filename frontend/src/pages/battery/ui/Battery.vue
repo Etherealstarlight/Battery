@@ -14,12 +14,15 @@
         <div class="progress"></div>
         <div class="progress__shadow" :style="{ width: `${battery?.percents}%` }"></div>
       </div>
-      <span class="text-h4 text-center text-grey">{{ `${battery?.percents}%` }}</span>
+      <span v-if="battery?.percents" class="text-h4 text-center text-grey">{{ `${battery?.percents}%` }}</span>
     </div>
     <v-btn v-if="user.isAdmin" class="mb-8 text-h2" icon height="180px" width="180px" @click="updateUserBattery">
       <v-icon size="72">mdi-lightning-bolt</v-icon>
     </v-btn>
     <v-btn class="logout__button" title="Сменить пользователя" icon height="72px" width="72px" @click="logout">
+      <v-icon>mdi-account-convert</v-icon>
+    </v-btn>
+    <v-btn class="update__button" title="Сменить пользователя" icon height="72px" width="72px" @click="loadBatteryData">
       <v-icon>mdi-account-convert</v-icon>
     </v-btn>
   </v-container>
@@ -38,13 +41,17 @@
   const { user } = storeToRefs(useUserStore())
   const router = useRouter()
 
-  onMounted(() => {
-    batteryStore.getUserBattery(1)
-  })
-
   const updateUserBattery = () => {
-    batteryStore.updateUserBattery({ ...battery.value, percents: battery.value.percents + 10 })
+    batteryStore.updateUserBattery({ ...battery.value, percents: 1.05 * Number(battery.value.percents) })
   }
+
+  const loadBatteryData = () => {
+    batteryStore.getUserBattery(1)
+  }
+
+  onMounted(() => {
+    loadBatteryData()
+  })
 
   const logout = () => {
     useUserStore()

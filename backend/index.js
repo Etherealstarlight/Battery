@@ -37,14 +37,14 @@ setInterval(async () => {
   batteries.forEach(async (battery) => {
     if (battery.percents > 1) {
       await models.Battery.update(
-        { percents: Number(battery.percents) >= 11 ? Number(battery.percents) - 10 : 1 },
+        { percents: Number(battery.percents) > 1 ? 0.95 * Number(battery.percents) : 1 },
         {
           where: { id: battery.id },
         }
       )
     }
   })
-}, 100000)
+}, 1000 * 60 * 60)
 
 app.get('/', (request, response) => {
   response.status(200).json({ message: 'SUCCESS' })
