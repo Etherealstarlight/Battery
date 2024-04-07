@@ -44,7 +44,7 @@
   const updateUserBattery = () => {
     batteryStore.updateUserBattery({
       ...battery.value,
-      percents: Math.round(Number(battery.value.percents) - 0.15 * Number(battery.value.percents)),
+      percents: Math.round(Number(battery.value.percents) + 0.35 * (100 - Number(battery.value.percents))),
     })
   }
 
