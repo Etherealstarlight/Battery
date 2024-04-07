@@ -37,7 +37,7 @@ setInterval(async () => {
   batteries.forEach(async (battery) => {
     if (battery.percents > 1) {
       await models.Battery.update(
-        { percents: Number(battery.percents) > 1 ? 0.95 * Number(battery.percents) : 1 },
+        { percents: Number(battery.percents) > 1 ? Math.round(0.95 * Number(battery.percents)) : 1 },
         {
           where: { id: battery.id },
         }
