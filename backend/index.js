@@ -32,6 +32,8 @@ start()
 console.log('STARTED')
 
 setInterval(async () => {
+  console.log('Percents decreased')
+
   const batteries = await models.Battery.findAll()
 
   batteries.forEach(async (battery) => {
