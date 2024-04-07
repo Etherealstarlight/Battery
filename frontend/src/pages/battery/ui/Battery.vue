@@ -42,7 +42,7 @@
   const router = useRouter()
 
   const updateUserBattery = () => {
-    batteryStore.updateUserBattery({ ...battery.value, percents: 1.05 * Number(battery.value.percents) })
+    batteryStore.updateUserBattery({ ...battery.value, percents: Math.round(1.1 * Number(battery.value.percents)) })
   }
 
   const loadBatteryData = () => {
