@@ -46,7 +46,7 @@ setInterval(async () => {
       )
     }
   })
-}, 1000 * 60)
+}, 1000 * 60 * 30)
 
 app.get('/', (request, response) => {
   response.status(200).json({ message: 'SUCCESS' })
