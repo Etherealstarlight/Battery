@@ -1,36 +1,58 @@
 <template>
-  <v-container class="pa-10 h-100 w-100 d-flex flex-column align-center justify-space-around" fluid>
-    <div class="ga-8 h-100 w-100 d-flex flex-column align-center justify-center">
+  <v-container class="pa-10 ga-8 h-100 w-100 d-flex flex-column align-center justify-center" fluid>
+    <div class="ga-8 w-100 d-flex flex-column align-center justify-start battery__container">
       <div class="d-flex battery">
         <div class="cluster"></div>
         <div class="cluster"></div>
         <div class="cluster"></div>
         <div class="cluster" style="border-right: none"></div>
-        <div
-          class="battery__background"
-          :style="{ width: `${100 - battery?.percents}%`, display: battery?.percents === 100 ? 'none' : 'block' }"
-        ></div>
-        <div class="progress__shadow" :style="{ width: `${battery?.percents}%` }"></div>
-        <div class="progress"></div>
-        <div class="progress__shadow" :style="{ width: `${battery?.percents}%` }"></div>
+        <div v-if="loading" class="battery__skeleton-loader"></div>
+        <div v-else>
+          <div
+            class="battery__background"
+            :style="{ width: `${100 - visiblePercents}%`, display: battery?.percents === 100 ? 'none' : 'block' }"
+          ></div>
+          <div class="progress__shadow" :style="{ width: `${visiblePercents}%` }"></div>
+          <div class="progress"></div>
+        </div>
       </div>
-      <span v-if="battery?.percents" class="text-h4 text-center text-grey">{{ `${battery?.percents}%` }}</span>
+      <span v-if="battery?.percents && !loading" class="pl-8 text-h4 text-center text-grey">{{
+        `${visiblePercents}%`
+      }}</span>
     </div>
-    <v-btn v-if="user.isAdmin" class="mb-8 text-h2" icon height="180px" width="180px" @click="updateUserBattery">
+    <v-btn
+      v-if="user.isAdmin"
+      class="mb-14 text-h2"
+      icon
+      height="180px"
+      width="180px"
+      :disabled="loading"
+      @click="updateUserBattery"
+    >
       <v-icon size="72">mdi-lightning-bolt</v-icon>
     </v-btn>
-    <v-btn class="logout__button" title="Сменить пользователя" icon height="72px" width="72px" @click="logout">
-      <v-icon>mdi-account-convert</v-icon>
-    </v-btn>
-    <v-btn class="update__button" title="Сменить пользователя" icon height="72px" width="72px" @click="loadBatteryData">
-      <v-icon>mdi-account-convert</v-icon>
-    </v-btn>
+    <div class="ga-4 d-flex flex-column actions__container">
+      <v-btn title="Сменить пользователя" icon height="72px" width="72px" @click="logout">
+        <v-icon>mdi-account-convert</v-icon>
+      </v-btn>
+      <v-btn
+        title="Обновить данные"
+        icon
+        height="72px"
+        width="72px"
+        :ripple="false"
+        :loading="loading"
+        @click="loadBatteryData"
+      >
+        <v-icon>mdi-refresh</v-icon>
+      </v-btn>
+    </div>
   </v-container>
 </template>
 
 <script setup>
   import { storeToRefs } from 'pinia'
-  import { onMounted } from 'vue'
+  import { onMounted, ref, watch } from 'vue'
   import { useRouter } from 'vue-router'
 
   import { useBatteryStore } from '@/entities/battery'
@@ -41,20 +63,35 @@
   const { user } = storeToRefs(useUserStore())
   const router = useRouter()
 
+  const loading = ref(false)
+  const visiblePercents = ref(0)
+
+  const setPercents = (percents) => {
+    const interval = setInterval(() => {
+      if (battery.value.percents > visiblePercents.value) visiblePercents.value++
+      else if (battery.value.percents < visiblePercents) visiblePercents.value--
+      else clearInterval(interval)
+    }, 10)
+  }
+
   const updateUserBattery = () => {
-    batteryStore.updateUserBattery({
-      ...battery.value,
-      percents: Math.round(Number(battery.value.percents) + 0.35 * (100 - Number(battery.value.percents))),
-    })
+    loading.value = true
+    batteryStore
+      .updateUserBattery({
+        ...battery.value,
+        percents: Math.round(Number(battery.value.percents) + 0.35 * (100 - Number(battery.value.percents))),
+      })
+      .finally(() => {
+        loading.value = false
+      })
   }
 
   const loadBatteryData = () => {
-    batteryStore.getUserBattery(1)
+    loading.value = true
+    batteryStore.getUserBattery(1).finally(() => {
+      loading.value = false
+    })
   }
-
-  onMounted(() => {
-    loadBatteryData()
-  })
 
   const logout = () => {
     useUserStore()
@@ -63,6 +100,18 @@
         router.push({ name: 'Auth' })
       })
   }
+
+  onMounted(() => {
+    loadBatteryData()
+  })
+
+  watch(
+    () => battery.value.percents,
+    (value) => {
+      setPercents(value)
+    },
+    { immediate: true }
+  )
 </script>
 
 <style scoped lang="scss">
@@ -101,7 +150,6 @@
       z-index: -4;
       background: linear-gradient(to bottom right, pink 50%, lightgreen 35%);
       filter: blur(35px);
-      transition: width 1s ease;
     }
 
     .battery__background {
@@ -113,7 +161,47 @@
       z-index: -2;
       background: white;
       box-shadow: -10px 0 10px 5px white;
-      transition: width 1s ease;
+    }
+
+    .battery__skeleton-loader {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      background: darkgrey;
+      z-index: -3;
+
+      overflow: hidden;
+    }
+
+    .battery__skeleton-loader::after {
+      position: absolute;
+      content: '';
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(
+        75deg,
+        transparent 1%,
+        transparent 25%,
+        lightgrey 50%,
+        transparent 75%,
+        transparent 100%
+      );
+      z-index: -2;
+
+      animation: loader 1s linear infinite;
+    }
+  }
+
+  @keyframes loader {
+    from {
+      left: -100%;
+    }
+    to {
+      left: 100%;
     }
   }
 
@@ -133,7 +221,12 @@
     box-shadow: 5px 0 7px -5px black;
   }
 
-  .logout__button {
+  .battery__container {
+    height: 35%;
+    margin: 48px 0 0 0;
+  }
+
+  .actions__container {
     position: absolute;
     right: 35px;
     top: 35px;
