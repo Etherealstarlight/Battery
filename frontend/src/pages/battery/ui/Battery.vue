@@ -16,7 +16,7 @@
           <div class="progress"></div>
         </div>
       </div>
-      <span v-if="battery?.percents && !loading" class="pl-8 text-h4 text-center text-grey">{{
+      <span v-if="battery?.percents && !loading" class="pl-4 text-h4 text-center text-grey">{{
         `${visiblePercents}%`
       }}</span>
     </div>
@@ -69,7 +69,7 @@
   const setPercents = (percents) => {
     const interval = setInterval(() => {
       if (battery.value.percents > visiblePercents.value) visiblePercents.value++
-      else if (battery.value.percents < visiblePercents) visiblePercents.value--
+      else if (battery.value.percents < visiblePercents.value) visiblePercents.value--
       else clearInterval(interval)
     }, 10)
   }
@@ -108,6 +108,7 @@
   watch(
     () => battery.value.percents,
     (value) => {
+      console.log('changed')
       setPercents(value)
     },
     { immediate: true }
