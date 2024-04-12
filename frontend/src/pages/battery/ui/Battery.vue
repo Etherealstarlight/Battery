@@ -27,7 +27,7 @@
       height="180px"
       width="180px"
       :disabled="loading"
-      @click="updateUserBattery"
+      @click="chargeUserBattery"
     >
       <v-icon size="72">mdi-lightning-bolt</v-icon>
     </v-btn>
@@ -60,10 +60,11 @@
 
   const batteryStore = useBatteryStore()
   const { battery } = storeToRefs(batteryStore)
-  const { user } = storeToRefs(useUserStore())
+  const userStore = useUserStore()
+  const { user, isLogged } = storeToRefs(userStore)
   const router = useRouter()
 
-  const loading = ref(false)
+  const loading = ref(true)
   const visiblePercents = ref(0)
 
   const setPercents = (percents) => {
@@ -74,31 +75,24 @@
     }, 10)
   }
 
-  const updateUserBattery = () => {
+  const chargeUserBattery = () => {
     loading.value = true
-    batteryStore
-      .updateUserBattery({
-        ...battery.value,
-        percents: Math.round(Number(battery.value.percents) + 0.35 * (100 - Number(battery.value.percents))),
-      })
-      .finally(() => {
-        loading.value = false
-      })
+    batteryStore.chargeUserBattery(user.value.batteryIds[0]).finally(() => {
+      loading.value = false
+    })
   }
 
   const loadBatteryData = () => {
     loading.value = true
-    batteryStore.getUserBattery(1).finally(() => {
+    batteryStore.getUserBattery(user.value.batteryIds[0]).finally(() => {
       loading.value = false
     })
   }
 
   const logout = () => {
-    useUserStore()
-      .logoutUser()
-      .then(() => {
-        router.push({ name: 'Auth' })
-      })
+    userStore.logoutUser().then(() => {
+      router.push({ name: 'Auth' })
+    })
   }
 
   onMounted(() => {
@@ -161,7 +155,7 @@
       height: 100%;
       z-index: -2;
       background: white;
-      box-shadow: -10px 0 10px 5px white;
+      box-shadow: 0 0 10px 10px white;
     }
 
     .battery__skeleton-loader {

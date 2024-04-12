@@ -20,4 +20,12 @@ export const actions = {
       }
     })
   },
+
+  chargeUserBattery(id) {
+    return BatteryApi.chargeUserBattery(id).then((response) => {
+      if (response.status === 200) {
+        this.update(response.data)
+      }
+    })
+  },
 }

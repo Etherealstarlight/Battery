@@ -1,8 +1,9 @@
 export default class User {
   constructor(data) {
     this.id = data.id
-    this.email = data.email
+    this.login = data.login
     this.role = data.role
+    this.batteryIds = data.batteryIds
   }
 
   get isAdmin() {

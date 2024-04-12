@@ -7,6 +7,7 @@ export const actions = {
       if (response.status === 200) {
         this.update(response.data)
         this.isLogged = true
+        Promise.resolve()
       }
     })
   },
@@ -27,8 +28,7 @@ export const actions = {
     return AuthApi.loginUser(params).then((response) => {
       if (response.status === 200) {
         localStorage.setItem('token', response.data.token)
-        this.init()
-        return Promise.resolve(jwtDecode(response.data.token))
+        return this.init()
       }
     })
   },

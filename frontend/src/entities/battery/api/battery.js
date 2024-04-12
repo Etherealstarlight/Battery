@@ -7,8 +7,8 @@ class BatteryApi {
     return transport.sendGet(`${this.appName}/${id}`)
   }
 
-  updateUserBattery = (battery) => {
-    return transport.sendPatch(`${this.appName}`, battery)
+  chargeUserBattery = (id) => {
+    return transport.sendPost(`${this.appName}/${id}/charge`)
   }
 }
 

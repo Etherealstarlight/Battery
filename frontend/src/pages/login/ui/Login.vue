@@ -4,7 +4,7 @@
       <v-card-title class="pa-0 pb-8">{{ 'Авторизация' }}</v-card-title>
       <v-card-text class="pa-0 ga-8 d-flex flex-column justify-center align-center">
         <v-text-field
-          v-model="email"
+          v-model="userLogin"
           class="w-100"
           variant="underlined"
           hide-details
@@ -12,7 +12,7 @@
           @keydown.enter="login"
         />
         <v-text-field
-          v-model="password"
+          v-model="userPassword"
           class="w-100"
           variant="underlined"
           hide-details
@@ -37,8 +37,8 @@
 
   import { useUserStore } from '@/entities/user'
 
-  const email = ref('battery')
-  const password = ref('')
+  const userLogin = ref('battery')
+  const userPassword = ref('')
 
   const router = useRouter()
 
@@ -48,7 +48,7 @@
 
   const login = () => {
     useUserStore()
-      .loginUser({ email: email.value, password: password.value })
+      .loginUser({ login: userLogin.value, password: userPassword.value })
       .then((response) => {
         console.log(response)
         goToBatteryPage()

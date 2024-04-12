@@ -36,6 +36,71 @@ class BatteryController {
 
     return response.json(battery)
   }
+
+  async charge(request, response) {
+    console.log(request.body)
+    const { id } = request.params
+    const battery = await Battery.findOne({
+      where: { id: id },
+    })
+    const donorBattery = await Battery.findOne({
+      where: { id: battery.donorId },
+    })
+
+    await Battery.update(
+      {
+        percents:
+          Math.round(Number(battery.percents) + 0.35 * (100 - Number(battery.percents))) < 100
+            ? Math.round(Number(battery.percents) + 0.35 * (100 - Number(battery.percents)))
+            : 100,
+      },
+      {
+        where: { id: battery.id },
+      }
+    )
+
+    await Battery.update(
+      {
+        percents:
+          Math.round(Number(donorBattery.percents) - 0.35 * (100 - Number(battery.percents))) > 0
+            ? Math.round(Number(donorBattery.percents) - 0.35 * (100 - Number(battery.percents)))
+            : 0,
+      },
+      {
+        where: { id: donorBattery.id },
+      }
+    )
+
+    return response.json(
+      await Battery.findOne({
+        where: { id: battery.id },
+      })
+    )
+  }
+
+  async setDonorBattery(request, response) {
+    console.log(request.body)
+    const { id } = request.params
+    await Battery.update(
+      { donorId: request.body.id },
+      {
+        where: { id: id },
+      }
+    )
+
+    await Battery.update(
+      { recipientId: id },
+      {
+        where: { id: request.body.id },
+      }
+    )
+
+    const battery = await Battery.findOne({
+      where: { id: id },
+    })
+
+    return response.json(battery)
+  }
 }
 
 module.exports = new BatteryController()

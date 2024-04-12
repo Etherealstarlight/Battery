@@ -36,15 +36,30 @@ setInterval(async () => {
 
   const batteries = await models.Battery.findAll()
 
-  batteries.forEach(async (battery) => {
-    if (battery.percents > 1) {
-      await models.Battery.update(
-        { percents: Number(battery.percents) > 1 ? Math.round(0.95 * Number(battery.percents)) : 1 },
-        {
-          where: { id: battery.id },
-        }
-      )
-    }
+  const donorBatteries = batteries.filter((battery) => battery.recipientId)
+  const recepientBatteries = batteries.filter((battery) => battery.donorId)
+
+  recepientBatteries.forEach(async (battery) => {
+    await models.Battery.update(
+      { percents: Math.round(0.95 * Number(battery.percents)) > 1 ? Math.round(0.95 * Number(battery.percents)) : 1 },
+      {
+        where: { id: battery.id },
+      }
+    )
+  })
+
+  donorBatteries.forEach(async (battery) => {
+    await models.Battery.update(
+      {
+        percents:
+          Math.round(battery.percents + 0.15 * (100 - Number(battery.percents))) < 100
+            ? Math.round(battery.percents + 0.15 * (100 - Number(battery.percents)))
+            : 100,
+      },
+      {
+        where: { id: battery.id },
+      }
+    )
   })
 }, 1000 * 60 * 30)
 
