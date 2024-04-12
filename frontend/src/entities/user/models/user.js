@@ -3,7 +3,7 @@ export default class User {
     this.id = data.id
     this.login = data.login
     this.role = data.role
-    this.batteryIds = data.batteryIds
+    this.batteryIds = data.batteryIds || []
   }
 
   get isAdmin() {

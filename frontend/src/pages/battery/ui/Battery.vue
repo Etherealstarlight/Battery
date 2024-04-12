@@ -84,7 +84,7 @@
 
   const loadBatteryData = () => {
     loading.value = true
-    batteryStore.getUserBattery(user.value.batteryIds[0]).finally(() => {
+    batteryStore.getUserBattery(user.value.batteryIds[0] || 1).finally(() => {
       loading.value = false
     })
   }
