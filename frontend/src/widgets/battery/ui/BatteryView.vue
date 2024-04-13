@@ -47,7 +47,7 @@
   const currentTab = ref(1)
   const isUserBatteryDonor = ref(false)
 
-  const isUserBatteryOwner = computed(() => user.value.id === props.battery.userId)
+  const isUserBatteryOwner = computed(() => user.value.id && user.value.id === props.battery.userId)
 
   const currentUserBatteryId = computed(() => Number(route.params.id))
 
