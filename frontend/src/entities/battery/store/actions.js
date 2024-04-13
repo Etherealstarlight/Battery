@@ -2,6 +2,8 @@ import BatteryApi from '../api/battery'
 
 export const actions = {
   getUserBattery(id) {
+    if (isNaN(id)) return Promise.reject({ message: 'Battery id is undefined' })
+
     return BatteryApi.getUserBattery(id).then((response) => {
       if (response.status === 200) {
         this.update(response.data)
