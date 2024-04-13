@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-let hostUrl = import.meta.env.VITE_SERVER_URL || window.location.origin
+const hostUrl = import.meta.env.VITE_SERVER_URL || window.location.origin
 
 console.log(import.meta.env.VITE_SERVER_URL)
 

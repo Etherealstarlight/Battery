@@ -1,5 +1,4 @@
 import AuthApi from '../api/auth'
-import { jwtDecode } from 'jwt-decode'
 
 export const actions = {
   init() {
@@ -7,7 +6,7 @@ export const actions = {
       if (response.status === 200) {
         this.update(response.data)
         this.isLogged = true
-        Promise.resolve()
+        return Promise.resolve(response.data)
       }
     })
   },
