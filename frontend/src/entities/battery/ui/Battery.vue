@@ -5,7 +5,7 @@
       <div class="cluster"></div>
       <div class="cluster"></div>
       <div class="cluster" style="border-right: none"></div>
-      <div v-if="loading" class="battery__skeleton-loader"></div>
+      <div v-if="isLoading" class="battery__skeleton-loader"></div>
       <div v-else>
         <div
           class="battery__background"
@@ -15,12 +15,15 @@
         <div class="progress"></div>
       </div>
     </div>
-    <span v-if="percents && !loading" class="pl-4 text-h4 text-center text-grey">{{ `${visiblePercents}%` }}</span>
+    <span v-if="percents && !isLoading" class="pl-4 text-h4 text-center text-grey">{{ `${visiblePercents}%` }}</span>
   </div>
 </template>
 
 <script setup>
+  import { storeToRefs } from 'pinia'
   import { ref, watch } from 'vue'
+
+  import { useBatteryStore } from '../store'
 
   const props = defineProps({
     percents: {
@@ -28,12 +31,9 @@
       required: false,
       default: null,
     },
-    loading: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
   })
+
+  const { isLoading } = storeToRefs(useBatteryStore())
 
   const visiblePercents = ref(0)
 
