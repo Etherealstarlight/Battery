@@ -7,13 +7,8 @@
       {{ isUserBatteryDonor ? 'Донор' : 'Реципиент' }}
     </v-tab>
   </v-tabs>
-  <Battery :percents="battery.percents" :loading="loading" />
-  <ChargeBattery
-    :batteryId="currentUserBatteryId"
-    :hidden="isUserBatteryDonor || !isUserBatteryOwner"
-    :loading="loading"
-    @update:loading="setLoading($event)"
-  />
+  <Battery :percents="battery.percents" />
+  <ChargeBattery :batteryId="currentUserBatteryId" :hidden="isUserBatteryDonor || !isUserBatteryOwner" />
 </template>
 
 <script setup>
@@ -31,14 +26,7 @@
       type: BatteryModel,
       required: true,
     },
-    loading: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
   })
-
-  const emits = defineEmits(['update:loading'])
 
   const { user } = storeToRefs(useUserStore())
   const route = useRoute()
@@ -55,26 +43,14 @@
     Number(currentTab.value) ? currentUserBatteryId.value : props.battery.donorId || props.battery.recipientId
   )
 
-  const setLoading = (value) => {
-    emits('update:loading', value)
-  }
-
   onMounted(() => {
-    setLoading(true)
-    loadBatteryData(currentBatteryId.value)
-      .then(() => {
-        isUserBatteryDonor.value = !!props.battery.recipientId
-      })
-      .finally(() => {
-        setLoading(false)
-      })
+    loadBatteryData(currentBatteryId.value).then(() => {
+      isUserBatteryDonor.value = !!props.battery.recipientId
+    })
   })
 
   watch(currentTab, () => {
-    setLoading(true)
-    loadBatteryData(currentBatteryId.value).finally(() => {
-      setLoading(false)
-    })
+    loadBatteryData(currentBatteryId.value)
   })
 </script>
 

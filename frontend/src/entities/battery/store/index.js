@@ -6,6 +6,7 @@ import { getters } from './getters'
 export const useBatteryStore = defineStore('battery', {
   state: () => ({
     batteryData: {},
+    isLoading: false,
   }),
   getters: getters,
   actions: actions,

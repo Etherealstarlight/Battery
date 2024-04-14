@@ -5,7 +5,7 @@
     height="72px"
     width="72px"
     :ripple="false"
-    :loading="loading"
+    :loading="isLoading"
     @click="updateBatteryData"
   >
     <v-icon>mdi-refresh</v-icon>
@@ -13,6 +13,10 @@
 </template>
 
 <script setup>
+  import { storeToRefs } from 'pinia'
+
+  import { useBatteryStore } from '@/entities/battery'
+
   import { useBatteryData } from '../composables/batteryData'
 
   const props = defineProps({
@@ -20,22 +24,13 @@
       type: Number,
       required: true,
     },
-    loading: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
   })
 
-  const emits = defineEmits(['update:loading'])
-
   const { loadBatteryData } = useBatteryData()
+  const { isLoading } = storeToRefs(useBatteryStore())
 
   const updateBatteryData = () => {
-    emits('update:loading', true)
-    loadBatteryData(props.batteryId).finally(() => {
-      emits('update:loading', false)
-    })
+    loadBatteryData(props.batteryId)
   }
 </script>
 

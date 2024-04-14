@@ -4,11 +4,16 @@ export const actions = {
   getUserBattery(id) {
     if (isNaN(id)) return Promise.reject({ message: 'Battery id is undefined' })
 
-    return BatteryApi.getUserBattery(id).then((response) => {
-      if (response.status === 200) {
-        this.update(response.data)
-      }
-    })
+    this.isLoading = true
+    return BatteryApi.getUserBattery(id)
+      .then((response) => {
+        if (response.status === 200) {
+          this.update(response.data)
+        }
+      })
+      .finally(() => {
+        this.isLoading = false
+      })
   },
 
   update(data) {
@@ -16,18 +21,28 @@ export const actions = {
   },
 
   updateUserBattery(battery) {
-    return BatteryApi.updateUserBattery(battery).then((response) => {
-      if (response.status === 200) {
-        this.update(response.data)
-      }
-    })
+    this.isLoading = true
+    return BatteryApi.updateUserBattery(battery)
+      .then((response) => {
+        if (response.status === 200) {
+          this.update(response.data)
+        }
+      })
+      .finally(() => {
+        this.isLoading = false
+      })
   },
 
   chargeUserBattery(id) {
-    return BatteryApi.chargeUserBattery(id).then((response) => {
-      if (response.status === 200) {
-        this.update(response.data)
-      }
-    })
+    this.isLoading = true
+    return BatteryApi.chargeUserBattery(id)
+      .then((response) => {
+        if (response.status === 200) {
+          this.update(response.data)
+        }
+      })
+      .finally(() => {
+        this.isLoading = false
+      })
   },
 }

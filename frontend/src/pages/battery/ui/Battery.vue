@@ -17,8 +17,8 @@
       fluid
     >
       <router-view>
-        <BatteryView :battery="battery" v-model:loading="loading" />
-        <UserActions v-model:loading="loading" />
+        <BatteryView :battery="battery" />
+        <UserActions />
       </router-view>
     </v-container>
   </v-container>
@@ -26,7 +26,6 @@
 
 <script setup>
   import { storeToRefs } from 'pinia'
-  import { ref } from 'vue'
 
   import { BatteryView, UserActions } from '@/widgets/battery'
 
@@ -35,8 +34,6 @@
 
   const { battery } = storeToRefs(useBatteryStore())
   const { user } = storeToRefs(useUserStore())
-
-  const loading = ref(false)
 </script>
 
 <style scoped lang="scss">
