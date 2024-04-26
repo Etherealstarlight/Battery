@@ -52,8 +52,8 @@ setInterval(async () => {
     await models.Battery.update(
       {
         percents:
-          Math.floor(battery.percents + 0.15 * (100 - Number(battery.percents))) < 100
-            ? Math.floor(battery.percents + 0.15 * (100 - Number(battery.percents)))
+          Math.ceil(battery.percents + 0.15 * (100 - Number(battery.percents))) < 100
+            ? Math.ceil(battery.percents + 0.15 * (100 - Number(battery.percents)))
             : 100,
       },
       {
