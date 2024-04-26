@@ -41,7 +41,7 @@ setInterval(async () => {
 
   recepientBatteries.forEach(async (battery) => {
     await models.Battery.update(
-      { percents: Math.round(0.95 * Number(battery.percents)) > 1 ? Math.round(0.95 * Number(battery.percents)) : 1 },
+      { percents: Math.floor(0.95 * Number(battery.percents)) > 1 ? Math.floor(0.95 * Number(battery.percents)) : 1 },
       {
         where: { id: battery.id },
       }
@@ -52,8 +52,8 @@ setInterval(async () => {
     await models.Battery.update(
       {
         percents:
-          Math.round(battery.percents + 0.15 * (100 - Number(battery.percents))) < 100
-            ? Math.round(battery.percents + 0.15 * (100 - Number(battery.percents)))
+          Math.floor(battery.percents + 0.15 * (100 - Number(battery.percents))) < 100
+            ? Math.floor(battery.percents + 0.15 * (100 - Number(battery.percents)))
             : 100,
       },
       {
