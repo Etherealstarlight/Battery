@@ -9,7 +9,7 @@
       <div v-else>
         <div
           class="battery__background"
-          :style="{ width: `${100 - visiblePercents}%`, display: percents === 100 ? 'none' : 'block' }"
+          :style="{ width: `${100 - visiblePercents}%`, display: visiblePercents === 100 ? 'none' : 'block' }"
         ></div>
         <div class="progress__shadow" :style="{ width: `${visiblePercents}%` }"></div>
         <div class="progress"></div>
@@ -48,7 +48,6 @@
   watch(
     () => props.percents,
     () => {
-      console.log('changed')
       setPercents()
     },
     { immediate: true }

@@ -2,8 +2,6 @@ import axios from 'axios'
 
 const hostUrl = import.meta.env.VITE_SERVER_URL || window.location.origin
 
-console.log(import.meta.env.VITE_SERVER_URL)
-
 const authInterceptor = (config) => {
   config.headers = {
     ...config.headers,
@@ -19,7 +17,6 @@ const axiosClient = axios.create({
 })
 
 axiosClient.interceptors.request.use((config) => {
-  console.log(config)
   authInterceptor(config)
   return config
 })

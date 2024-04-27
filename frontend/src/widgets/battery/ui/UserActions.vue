@@ -3,21 +3,20 @@
     <v-btn title="Сменить пользователя" icon height="72px" width="72px" @click="logout">
       <v-icon>mdi-account-convert</v-icon>
     </v-btn>
-    <UpdateBatteryData :batteryId="currentUserBatteryId" />
+    <UpdateBatteryData :batteryId="battery.id" />
   </div>
 </template>
 
 <script setup>
-  import { computed } from 'vue'
-  import { useRoute } from 'vue-router'
+  import { storeToRefs } from 'pinia'
 
   import { useAuth } from '@/features/auth'
   import { UpdateBatteryData } from '@/features/battery'
 
-  const { logout } = useAuth()
-  const route = useRoute()
+  import { useBatteryStore } from '@/entities/battery'
 
-  const currentUserBatteryId = computed(() => Number(route.params.id))
+  const { logout } = useAuth()
+  const { battery } = storeToRefs(useBatteryStore())
 </script>
 
 <style scoped lang="scss">
